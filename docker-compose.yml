@@ -1,0 +1,31 @@
+version: '3'
+services:
+  influxdb:
+    image: influxdb:1.2.4
+    ports: 
+      - 8086:8086
+      - 8083:8083
+    environment:
+      - "INFLUXDB_DB=mydb"
+      - "INFLUXDB_ADMIN_USER=root"
+      - "INFLUXDB_ADMIN_PASSWORD=root"
+  grafana:
+    image: grafana/grafana
+    ports: 
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+  amqp-influxdb-forwarder:
+    image: amqp-influxdb-forwarder
+    build: .
+    volumes:
+      - "/Users/eranz/Desktop/work/amqp-influxdb-forwarder:/code"
+    environment:
+      - "CONF_azure__iothub_amqp_url=amqps://service:jngv6V8l3khrl6SfZ8aEgPnt9xIkjX%2B0HPULb55kH0g%3D@iothub-ns-cstest-244639-4fb9982eb0.servicebus.windows.net:5671"
+      - "CONF_azure__iothub_partition_name=cstest"
+      - "CONF_influxdb__host=influxdb"
+      - "CONF_influxdb__user=root"
+      - "CONF_influxdb__pass=root"
+      - "CONF_influxdb__port=8086"
+      - "CONF_influxdb__database=mydb"
