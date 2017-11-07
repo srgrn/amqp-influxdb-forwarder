@@ -133,8 +133,9 @@ def convert_to_influx_format(message):
     except json.decoder.JSONDecodeError:
         return
     
-    time = body.get("time",message.annotations["iothub-enqueuedtime"])
-    time = datetime.datetime.fromtimestamp(time/1000.0).strftime('%Y-%m-%d %H:%M:%S.%f')
+    time = body.get("time")
+    if time is None: 
+        time = datetime.datetime.fromtimestamp(message.annotations["iothub-enqueuedtime"]/1000.0).strftime('%Y-%m-%d %H:%M:%S.%f')
 
     json_body = [
         {'measurement': name, 'time': time, 'fields': 
